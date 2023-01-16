@@ -33,7 +33,6 @@ module.New = function(Gui)
 end
 
 function module:Enable()
-	print("Enabled called.")
 	local data = self.Data
 	local tweens = data.StoredTweens
 	data.Gui.Enabled = true
@@ -54,7 +53,6 @@ function module:Enable()
 end
 
 function module:Disable()
-	print("Disabled called.")
 	local data = self.Data
 	local tweens = data.StoredTweens
 	data.Gui.Enabled = false
