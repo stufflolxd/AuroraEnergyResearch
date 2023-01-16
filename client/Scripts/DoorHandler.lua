@@ -14,6 +14,9 @@ local Billboards = {}
 local EnabledBillboards = {}
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local BridgeNet = require(ReplicatedStorage.Shared.BridgeNet)
+local Remote = BridgeNet.CreateBridge("DoorBridge")
 
 local function ReturnPartInHighlightTable(Part)
 	for _,v in pairs(EnabledHighlights) do
@@ -81,6 +84,27 @@ local function ReverseAllBillboardTweens()
 	end)
 end
 
+
+
+
+local function TweenModel(model, cframe, time)
+	local CFrameValue = Instance.new("CFrameValue")
+	CFrameValue.Value = model:GetPrimaryPartCFrame()
+
+	CFrameValue:GetPropertyChangedSignal("Value"):Connect(function()
+		model:SetPrimaryPartCFrame(CFrameValue.Value)
+	end)
+
+	local info = TweenInfo.new(time, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+	local tween = TweenService:Create(CFrameValue, info, {Value = cframe})
+	tween:Play()
+
+	tween.Completed:Connect(function()
+		CFrameValue:Destroy()
+		tween:Destroy()
+	end)
+end
+
 local module = {}
 
 function module.Init()
@@ -96,6 +120,7 @@ function module.Init()
 	end
 	local plr = game.Players.LocalPlayer
 	local debounce = false
+	local inputdebounce = false
 	RunService.Heartbeat:Connect(function()
 		if debounce == false then
 			local char = plr.Character
@@ -130,6 +155,48 @@ function module.Init()
 				else
 					ReverseAllHighlightTweens()
 					ReverseAllBillboardTweens()
+				end
+			end
+		end
+	end)
+	game:GetService("UserInputService").InputBegan:connect(function(inputObject, gameProcessedEvent)
+		if gameProcessedEvent then return end
+		if inputObject.KeyCode == Enum.KeyCode.E then
+			for i,v in pairs(EnabledBillboards) do
+				local gui = v.Data.Gui
+				local scripted = gui:FindFirstAncestor("Scripted")
+				local attributes = scripted:GetAttributes()
+				if plr:GetAttribute("Clearance") >= attributes.Clearance then
+					Remote:Fire(scripted)
+					if attributes.Class == "Vault Door" then
+						if attributes.Moving == false and inputdebounce == false then
+							local doorhighlight = scripted.Door.Highlight
+							local buttonhighlight = scripted.Button.Highlight
+							local interaction = FindClassFromBillboardTable(scripted.Interaction_Sensory.InteractionSystem)
+							inputdebounce = true
+							if attributes.Open == false then
+								doorhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								buttonhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								interaction:Disable()
+								task.wait(1.7)
+								TweenModel(scripted.Door, scripted.OpenPos.CFrame, 15)
+								task.wait(15)
+								doorhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+								buttonhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+							else
+								TweenModel(scripted.Door, scripted.ClosedPos.CFrame, 15)
+								doorhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								buttonhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								interaction:Disable()
+								task.wait(15)
+								task.wait(1.7)
+								doorhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+								buttonhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+							end
+							task.wait(1)
+							inputdebounce = false
+						end
+					end
 				end
 			end
 		end

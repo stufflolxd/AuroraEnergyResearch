@@ -48,7 +48,7 @@ function module:Enable()
 	tweens.DescriptionTransparencyIn:Play()
 	tweens.TitleTransparencyIn.Completed:Wait()
 	if data.Enabled == true then
-		data.Highlight.Enabled = true
+		data.Gui.Enabled = true
 	end
 end
 
@@ -67,7 +67,7 @@ function module:Disable()
 	tweens.DescriptionTransparencyOut:Play()
 	tweens.DescriptionTransparencyOut.Completed:Wait()
 	if data.Enabled == false then
-		data.Highlight.Enabled = false
+		data.Gui.Enabled = false
 	end
 end
 
