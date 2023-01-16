@@ -26,7 +26,7 @@ local function ReturnClearance(plr)
 	end
 	for i,v in pairs(ClearanceList) do
 		if highestrank == v then
-			return i
+			return tonumber(i)
 		end
 	end
 end
