@@ -67,6 +67,70 @@ function module.Init()
 					scripted:SetAttribute("Open", false)
 				end
 			end
+			if attributes.Class == "Akkala Door" then
+				
+				local function SmonkOn()
+					for i,v in pairs(scripted.Door:GetChildren()) do
+						if v.Name == "Smonk" then
+							v.ParticleEmitter.Enabled = true
+						end
+					end
+				end
+				
+				local function SmonkOff()
+					for i,v in pairs(scripted.Door:GetChildren()) do
+						if v.Name == "Smonk" then
+							v.ParticleEmitter.Enabled = false
+						end
+					end
+				end
+				
+				if attributes.Open == false then
+					scripted:SetAttribute("Moving", true)
+					scripted.Door.Noise.Alarm:Play()
+					task.wait(2)
+					scripted.Door.Noise.Sound:Play()
+					SmonkOn()
+					TweenModel(scripted.Door.InnerRing, scripted.CFrameStuff["InnerRing_1"].CFrame, 2)
+					task.wait(0.5)
+					SmonkOff()
+					task.wait(2.5)
+					TweenModel(scripted.Door.OuterRing, scripted.CFrameStuff["OuterRing_1"].CFrame, 4)
+					SmonkOn()
+					task.wait(0.5)
+					SmonkOff()
+					task.wait(1.5)
+					TweenModel(scripted.Door.InnerRing, scripted.CFrameStuff["InnerRing_2"].CFrame, 4.5)
+					task.wait(4.5)
+					SmonkOn()
+					task.wait(0.7)
+					SmonkOff()
+					TweenModel(scripted.Door, scripted.CFrameStuff["MiddlePos"].CFrame, 1)
+					task.wait(1)
+					TweenModel(scripted.Door, scripted.CFrameStuff["HangPos"].CFrame, 11)
+					task.wait(11)
+					TweenModel(scripted.Door, scripted.CFrameStuff["OpenPos"].CFrame, 4)
+					task.wait(5)
+					scripted.Door.Noise.Alarm:Stop()
+					scripted:SetAttribute("Moving", false)
+					scripted:SetAttribute("Open", true)
+				else
+					scripted:SetAttribute("Moving", true)
+					scripted.Door.Noise.Alarm:Play()
+					scripted.Door.Noise.Close:Play()
+					TweenModel(scripted.Door, scripted.CFrameStuff["MiddlePos"].CFrame, 11)
+					task.wait(11)
+					TweenModel(scripted.Door, scripted.CFrameStuff["ClosedPos"].CFrame, 1)
+					task.wait(2)
+					TweenModel(scripted.Door.InnerRing, scripted.CFrameStuff["InnerRing_Default"].CFrame, 4.5)
+					task.wait(4.5)
+					TweenModel(scripted.Door.OuterRing, scripted.CFrameStuff["OuterRing_Default"].CFrame, 4)
+					task.wait(4)
+					scripted.Door.Noise.Alarm:Stop()
+					scripted:SetAttribute("Moving", false)
+					scripted:SetAttribute("Open", false)
+				end
+			end
 		end
 	end)
 end

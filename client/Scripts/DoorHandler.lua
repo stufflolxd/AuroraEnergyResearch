@@ -151,6 +151,26 @@ function module.Init()
 							AddToBillboardTable(Billboard)
 						end
 					end
+					if class == "Akkala Door" then
+						local highlight = scripted.Button.Highlight
+						if ReturnPartInHighlightTable(highlight) then
+						else
+							debounce = true
+							task.wait(0.1)
+
+							local ButtonHighlight = FindClassFromHighlightTable(highlight)
+							ButtonHighlight:Enable()
+							AddToHighlightTable(ButtonHighlight)
+
+							local DoorHighlight = FindClassFromHighlightTable(scripted.Door.Highlight)
+							DoorHighlight:Enable()
+							AddToHighlightTable(DoorHighlight)
+
+							local Billboard = FindClassFromBillboardTable(scripted.Interaction_Sensory.InteractionSystem)
+							Billboard:Enable()
+							AddToBillboardTable(Billboard)
+						end
+					end
 					debounce = false
 				else
 					ReverseAllHighlightTweens()
@@ -190,6 +210,40 @@ function module.Init()
 								interaction:Disable()
 								task.wait(15)
 								task.wait(1.7)
+								doorhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+								buttonhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+							end
+							task.wait(1)
+							inputdebounce = false
+						end
+					end
+					if attributes.Class == "Akkala Door" then
+						if attributes.Moving == false and inputdebounce == false then
+							local doorhighlight = scripted.Door.Highlight
+							local buttonhighlight = scripted.Button.Highlight
+							local interaction = FindClassFromBillboardTable(scripted.Interaction_Sensory.InteractionSystem)
+							inputdebounce = true
+							if attributes.Open == false then
+								doorhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								buttonhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								interaction:Disable()
+								task.wait(12.2)
+								TweenModel(scripted.Door, scripted.CFrameStuff["MiddlePos"].CFrame, 1)
+								task.wait(1)
+								TweenModel(scripted.Door, scripted.CFrameStuff["HangPos"].CFrame, 11)
+								task.wait(11)
+								TweenModel(scripted.Door, scripted.CFrameStuff["OpenPos"].CFrame, 4)
+								task.wait(5)
+								doorhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+								buttonhighlight.FillColor = Color3.fromRGB(255, 255, 255)
+							else
+								TweenModel(scripted.Door, scripted.CFrameStuff["MiddlePos"].CFrame, 11)
+								doorhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								buttonhighlight.FillColor = Color3.fromRGB(114, 255, 119)
+								interaction:Disable()
+								task.wait(11)
+								TweenModel(scripted.Door, scripted.CFrameStuff["ClosedPos"].CFrame, 1)
+								task.wait(10.5)
 								doorhighlight.FillColor = Color3.fromRGB(255, 255, 255)
 								buttonhighlight.FillColor = Color3.fromRGB(255, 255, 255)
 							end
